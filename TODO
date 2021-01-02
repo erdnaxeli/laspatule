@@ -1,0 +1,35 @@
+Laspatule::Models
+    Ingredient
+    Recipe::Ingredient
+    Recipe::Step
+    Recipe::Section
+    Recipe
+
+Laspatule::Services::Ingredient
+#add
+#get(id)
+#get(id, count) => pagination
+
+Laspatule::Services::Recipe
+#add
+#get
+#search
+
+Laspatule::Repository::Ingredient
+#get_by_id
+#get_by_name
+#store
+
+Laspatule::Repository::Recipe
+#get_by_id
+#store
+
+Laspatule::API::Models::Ingredient
+Laspatule::API::Models::CreateIngredient
+Laspatule::API::Models::RecipeIngredient
+Laspatule::API::Models::Recipe
+Laspatule::API::Models::CreateRecipe
+
+Laspatule::API::Ingredient
+* GET /ingredients/:id
+* POST /ingredients
