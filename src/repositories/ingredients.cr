@@ -1,6 +1,8 @@
 require "../models"
 
 module Laspatule::Repositories::Ingredients
+  # Creates a new ingredient and returns its id.
+  abstract def create(ingredient : Models::CreateIngredient) : Int32
   # Gets an ingredient by id.
   abstract def get_by_id(id : Int32) : Models::Ingredient
   # Gets an ingredient by name.
@@ -11,6 +13,4 @@ module Laspatule::Repositories::Ingredients
   #
   # This is a paginated query, see `Page` for pagination instructions.
   abstract def search_by_name(name : String, page_size : Int32, next_page previous_page : Int32 = nil?) : Page(Ingredient)
-  # Stores a new ingredient and returns its id.
-  abstract def store(ingredient : Models::Ingredient) : Int32
 end
