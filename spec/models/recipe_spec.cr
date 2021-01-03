@@ -3,11 +3,16 @@ require "./spec_helper"
 describe Laspatule::Models::Recipe do
   describe ".new" do
     it "add default ingredients and sections" do
-      recipe = Laspatule::Models::Recipe.new(id: 42, title: "Ratatouille")
+      recipe = Laspatule::Models::Recipe.new(
+        id: 42,
+        title: "Ratatouille",
+        user: USER,
+      )
       recipe.id.should eq(42)
       recipe.title.should eq("Ratatouille")
       recipe.ingredients.size.should eq(0)
       recipe.sections.size.should eq(0)
+      recipe.user.name.should eq("user")
     end
   end
 
@@ -18,7 +23,8 @@ describe Laspatule::Models::Recipe do
           "id": 42,
           "title": "Ratatouille",
           "ingredients": [],
-          "sections": []
+          "sections": [],
+          "user": {"id": 1, "name": "user"}
         }
       ))
       recipe.class.should eq(Laspatule::Models::Recipe)
@@ -29,8 +35,12 @@ describe Laspatule::Models::Recipe do
 
   describe "#to_json" do
     it "serializes a Recipe to json" do
-      json = Laspatule::Models::Recipe.new(id: 42, title: "Ratatouille").to_json
-      json.should eq(%({"id":42,"title":"Ratatouille","ingredients":[],"sections":[]}))
+      json = Laspatule::Models::Recipe.new(
+        id: 42,
+        title: "Ratatouille",
+        user: USER,
+      ).to_json
+      json.should eq(%({"id":42,"title":"Ratatouille","user":{"id":1,"name":"user"},"ingredients":[],"sections":[]}))
     end
   end
 end

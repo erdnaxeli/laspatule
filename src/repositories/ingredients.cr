@@ -11,6 +11,6 @@ module Laspatule::Repositories::Ingredients
   # The ingredients are ordered by the size of the *name* string,
   # shortest first.
   #
-  # This is a paginated query, see `Page` for pagination instructions.
-  abstract def search_by_name(name : String, page_size : Int32, next_page previous_page : Int32 = nil?) : Page(Ingredient)
+  # This is a paginated query, see `Models::Page` for pagination instructions.
+  abstract def search_by_name(name : String, page_size : Int32, next_page previous_page : Int32 = nil?) : Models::Page(Ingredient)
 end
