@@ -32,4 +32,10 @@ Laspatule::API::Models::CreateRecipe
 
 Laspatule::API::Ingredient
 * GET /ingredients/:id
+* GET /ingredients?name=
 * POST /ingredients
+
+Laspatule::API::Recipe
+* GET /recipes
+* GET /recipes?name=
+* POST /recipes

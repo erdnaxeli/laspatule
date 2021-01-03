@@ -1,5 +1,7 @@
 record(
   Laspatule::Models::Recipe::Step,
   id : Int32,
-  instruction : String,
-)
+  instruction : String
+) do
+  include JSON::Serializable
+end
