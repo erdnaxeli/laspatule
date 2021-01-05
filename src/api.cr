@@ -5,7 +5,8 @@ require "./config"
 require "./repositories/db"
 
 config = Laspatule::Config.read("config.yaml")
-db = Laspatule::Repositories::DB.new(config.db)
+db = Laspatule::Repositories::DB.open(config.db)
+Laspatule::Repositories::DB.migrate(db)
 ingredients_repo = Laspatule::Repositories::DB::Ingredients.new(db)
 
 serve_static false
