@@ -11,6 +11,8 @@ ingredients_repo = Laspatule::Repositories::DB::Ingredients.new(db)
 
 serve_static false
 
+error 404 { }
+
 after_all do |env|
   env.response.content_type = "application/json"
 end

@@ -10,7 +10,7 @@ module Laspatule::API::Ingredients
       service = Laspatule::Services::Ingredients.new(12, ingredients_repo)
 
       begin
-        service.get_by_id(id).to_json, 404
+        service.get_by_id(id).to_json
       rescue Laspatule::Repositories::Ingredients::IngredientNotFoundError
         halt env, status_code: 404
       end

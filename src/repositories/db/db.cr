@@ -32,17 +32,15 @@ module Laspatule::Repositories::DB
   end
 
   private def self.version_table_exists?(db) : Bool
-    begin
-      db.query_one(
-        "SELECT 1 FROM sqlite_master WHERE type = ? AND name = ?",
-        "table",
-        "version",
-        as: Int32
-      )
-      true
-    rescue ::DB::Error
-      false
-    end
+    db.query_one(
+      "SELECT 1 FROM sqlite_master WHERE type = ? AND name = ?",
+      "table",
+      "version",
+      as: Int32
+    )
+    true
+  rescue ::DB::Error
+    false
   end
 
   private def self.create_version_table(db) : Nil

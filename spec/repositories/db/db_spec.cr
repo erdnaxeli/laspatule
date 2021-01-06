@@ -2,8 +2,8 @@ require "./spec_helper"
 
 describe Laspatule::Repositories::DB do
   config = Laspatule::Repositories::DB::Config.new(
-        uri: "sqlite3://%3Amemory%3A?cache=shared"
-      )
+    uri: "sqlite3://%3Amemory%3A?cache=shared"
+  )
 
   describe ".open" do
     it "returns a new Database object" do
