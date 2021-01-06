@@ -16,7 +16,7 @@ class Laspatule::Repositories::DB::Ingredients
         tx.commit
         return er.last_insert_id.to_i
       rescue e : SQLite3::Exception
-        if e.code == 2067
+        if e.code == 19
           raise DuplicatedIngredientError.new(
             "Ingredient #{ingredient.name} already exists"
           )
@@ -31,10 +31,12 @@ class Laspatule::Repositories::DB::Ingredients
   def get_by_id(id : Int32) : Models::Ingredient
     @db.transaction do |tx|
       cnn = tx.connection
-      cnn.query_one("SELECT id, name FROM ingredient WHERE id = ?", id) do |rs|
-        return Models::Ingredient.new(id: rs.read(Int32), name: rs.read(String))
-      end
-      raise "BUG: unreachable"
+      result = cnn.query_one(
+        "SELECT id, name FROM ingredient WHERE id = ?",
+        id,
+        as: {id: Int32, name: String},
+      )
+      return Models::Ingredient.new(**result)
     end
     raise "BUG: unreachable"
   rescue ::DB::NoResultsError
