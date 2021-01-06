@@ -29,16 +29,12 @@ class Laspatule::Repositories::DB::Ingredients
   end
 
   def get_by_id(id : Int32) : Models::Ingredient
-    @db.transaction do |tx|
-      cnn = tx.connection
-      result = cnn.query_one(
-        "SELECT id, name FROM ingredient WHERE id = ?",
-        id,
-        as: {id: Int32, name: String},
-      )
-      return Models::Ingredient.new(**result)
-    end
-    raise "BUG: unreachable"
+    result = @db.query_one(
+      "SELECT id, name FROM ingredient WHERE id = ?",
+      id,
+      as: {id: Int32, name: String},
+    )
+    Models::Ingredient.new(**result)
   rescue ::DB::NoResultsError
     raise Ingredients::IngredientNotFoundError.new("Ingredient with id #{id} not found")
   end
