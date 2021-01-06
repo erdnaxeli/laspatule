@@ -43,5 +43,3 @@ class Laspatule::Repositories::DB::Ingredients
     Models::Page(Ingredient).new(content: Array(Ingredient).new, next_page: 0)
   end
 end
-
-""

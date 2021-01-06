@@ -15,5 +15,23 @@ module Laspatule::API::Ingredients
         halt env, status_code: 404
       end
     end
+
+    post "/ingredients" do |env|
+      puts env.request.headers["content-type"]?
+      if env.request.headers["content-type"]?.try &.downcase != "application/json"
+        halt env, status_code: 415
+      end
+
+      ingredient = Laspatule::Models::CreateIngredient.from_json(
+        env.request.body.not_nil!.gets_to_end
+      )
+      service = Laspatule::Services::Ingredients.new(12, ingredients_repo)
+
+      begin
+        service.create(ingredient)
+      rescue Laspatule::Repositories::Ingredients::DuplicatedIngredientError
+        halt env, status_code: 409
+      end
+    end
   end
 end
