@@ -16,7 +16,7 @@ class Laspatule::Repositories::DB::Ingredients
         tx.commit
         return er.last_insert_id.to_i
       rescue e : SQLite3::Exception
-        if e.code == 19
+        if e.code == 19 && e.message.try &.includes?("UNIQUE")
           raise DuplicatedIngredientError.new(
             "Ingredient #{ingredient.name} already exists"
           )

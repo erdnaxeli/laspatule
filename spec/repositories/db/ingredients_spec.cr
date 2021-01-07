@@ -27,6 +27,24 @@ describe Laspatule::Repositories::DB::Ingredients do
         end
       end
     end
+
+    it "raises an error when the ingredient's name is too big" do
+      with_ingredient_repo do |repo|
+        ingredient = Laspatule::Models::CreateIngredient.new(name: "*" * 100)
+        expect_raises(SQLite3::Exception) do
+          repo.create(ingredient)
+        end
+      end
+    end
+
+    it "raises an error when the ingredient's name is empty" do
+      with_ingredient_repo do |repo|
+        ingredient = Laspatule::Models::CreateIngredient.new(name: "")
+        expect_raises(Exception) do
+          repo.create(ingredient)
+        end
+      end
+    end
   end
 
   describe "#get_by_id" do

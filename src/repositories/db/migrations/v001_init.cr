@@ -9,6 +9,7 @@ module Laspatule::Repositories::DB::Migrations::V001
         id INTEGER PRIMARY KEY
         , created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         , name TEXT(100) UNIQUE NOT NULL
+          CHECK (0 < LENGTH(name) AND LENGTH(name) < 100)
       );
       CREATE TABLE recipe (
         id INTEGER PRIMARY KEY
