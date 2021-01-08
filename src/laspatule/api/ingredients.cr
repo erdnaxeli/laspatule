@@ -17,7 +17,6 @@ module Laspatule::API::Ingredients
     end
 
     post "/ingredients" do |env|
-      puts env.request.headers["content-type"]?
       if env.request.headers["content-type"]?.try &.downcase != "application/json"
         halt env, status_code: 415
       end
@@ -25,6 +24,10 @@ module Laspatule::API::Ingredients
       ingredient = Laspatule::Models::CreateIngredient.from_json(
         env.request.body.not_nil!.gets_to_end
       )
+      if (errors = ingredient.validate).size > 0
+        halt env, status_code: 400, response: errors.to_json
+      end
+
       service = Laspatule::Services::Ingredients.new(12, ingredients_repo)
 
       begin
