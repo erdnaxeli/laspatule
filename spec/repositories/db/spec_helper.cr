@@ -1,7 +1,5 @@
 require "./spec_helper"
 
-require "../../../src/repositories/db"
-
 def with_db
   config = Laspatule::Repositories::DB::Config.new(
     uri: "sqlite3://%3Amemory%3A"

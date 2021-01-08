@@ -1,7 +1,5 @@
 require "../spec_helper"
 
-require "../../src/repositories/ingredients"
-
 class IngredientRepoMock
   include Laspatule::Repositories::Ingredients
 

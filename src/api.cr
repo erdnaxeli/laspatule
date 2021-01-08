@@ -1,8 +1,6 @@
 require "kemal"
 
-require "./api/*"
-require "./config"
-require "./repositories/db"
+require "./laspatule"
 
 config = Laspatule::Config.read("config.yaml")
 db = Laspatule::Repositories::DB.open(config.db)

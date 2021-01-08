@@ -1,7 +1,5 @@
 require "./spec_helper"
 
-require "../../src/services/ingredients"
-
 describe Laspatule::Services::Ingredients do
   repository = IngredientRepoMock.new
   service = Laspatule::Services::Ingredients.new(1, repository)
