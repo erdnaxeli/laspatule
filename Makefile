@@ -1,6 +1,9 @@
 all:
 	shards build
 
+run:
+	crystal run src/api.cr
+
 doc:
 	crystal doc
 

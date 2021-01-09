@@ -39,7 +39,33 @@ class Laspatule::Repositories::DB::Ingredients
     raise Ingredients::IngredientNotFoundError.new("Ingredient with id #{id} not found")
   end
 
-  def search_by_name(name : String, page_size : Int32, next_page previous_page : Int32? = nil) : Models::Page(Ingredient)
-    Models::Page(Ingredient).new(content: Array(Ingredient).new, next_page: 0)
+  def search_by_name(name : String, page_size : Int32, next_page previous_page : String? = nil) : Models::Page(Models::Ingredient)
+    if previous_page
+      previous_length, previous_id = previous_page.split('_').map &.to_i
+      result = @db.query_all(
+        "SELECT id, name FROM ingredient WHERE name LIKE ? AND (LENGTH(name), id) > (?, ?) ORDER BY LENGTH(name), id LIMIT ?",
+        "%#{name}%",
+        previous_length,
+        previous_id,
+        page_size,
+        as: {id: Int32, name: String},
+      )
+    else
+      result = @db.query_all(
+        "SELECT id, name FROM ingredient WHERE name LIKE ? ORDER BY LENGTH(name), id LIMIT ?",
+        "%#{name}%",
+        page_size,
+        as: {id: Int32, name: String},
+      )
+    end
+
+    content = result.map { |r| Models::Ingredient.new(**r) }
+    if content.size < page_size
+      next_page = nil
+    elsif last_item = content.last?
+      next_page = "#{last_item.name.size}_#{last_item.id}"
+    end
+
+    Models::Page(Models::Ingredient).new(content: content, next_page: next_page)
   end
 end
