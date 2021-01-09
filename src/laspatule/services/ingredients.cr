@@ -11,4 +11,11 @@ class Laspatule::Services::Ingredients
   def get_by_id(id : Int32) : Models::Ingredient
     @repository.get_by_id(id)
   end
+
+  # Search ingredients by name.
+  #
+  # See `Models::Page` documentation about pagination.
+  def search_by_name(name : String, page_size : Int32, next_page : String?) : Models::Page(Models::Ingredient)
+    @repository.search_by_name(name, page_size, next_page)
+  end
 end

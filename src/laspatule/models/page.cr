@@ -11,4 +11,6 @@ record(
   Laspatule::Models::Page(T),
   content : Array(T),
   next_page : String?,
-)
+) do
+  include JSON::Serializable
+end
