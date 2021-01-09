@@ -10,11 +10,11 @@ describe Laspatule::Services::Ingredients do
 
   describe "#creates" do
     it "creates a new ingredient" do
-      id = service.create(
+      aubergine = service.create(
         Laspatule::Models::CreateIngredient.new(name: "aubergine")
       )
 
-      id.should eq(1)
+      aubergine.name.should eq("aubergine")
       repository.calls["create"].size.should eq(1)
       repository.calls["create"][0].size.should eq(1)
       ingredient = repository.calls["create"][0]["ingredient"].as(Laspatule::Models::CreateIngredient)

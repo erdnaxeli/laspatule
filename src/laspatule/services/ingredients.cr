@@ -2,9 +2,10 @@ class Laspatule::Services::Ingredients
   def initialize(@user_id : Int32, @repository : Repositories::Ingredients)
   end
 
-  # Creates a new ingredient and returns its id.
-  def create(ingredient : Models::CreateIngredient) : Int32
-    @repository.create(ingredient)
+  # Creates a new ingredient and returns its.
+  def create(ingredient : Models::CreateIngredient) : Models::Ingredient
+    id = @repository.create(ingredient)
+    @repository.get_by_id(id)
   end
 
   # Gets an ingredient by id.
