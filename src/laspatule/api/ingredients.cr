@@ -33,7 +33,7 @@ module Laspatule::API::Ingredients
       service = Laspatule::Services::Ingredients.new(12, ingredients_repo)
 
       begin
-        service.create(ingredient)
+        service.create(ingredient).to_json
       rescue Laspatule::Repositories::Ingredients::DuplicatedIngredientError
         halt env, status_code: 409
       end
