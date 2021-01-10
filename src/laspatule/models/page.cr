@@ -6,7 +6,8 @@
 #
 # If *next_page* if empty it means the current page is the last one.
 #
-# *next_page* should be considered to be opaque token.
+# *next_page* should be considered to be an opaque token.
+@[JSON::Serializable::Options(emit_nulls: true)]
 record(
   Laspatule::Models::Page(T),
   content : Array(T),
