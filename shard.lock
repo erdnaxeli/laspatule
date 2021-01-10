@@ -28,3 +28,7 @@ shards:
     git: https://github.com/crystal-lang/crystal-sqlite3.git
     version: 0.17.0
 
+  swagger:
+    git: https://github.com/icyleaf/swagger.git
+    version: 0.2.2
+

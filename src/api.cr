@@ -16,5 +16,6 @@ after_all do |env|
 end
 
 Laspatule::API::Ingredients.setup(ingredients_repo)
+Laspatule::API::Doc.setup
 
 Kemal.run
