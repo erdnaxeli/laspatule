@@ -2,7 +2,7 @@ require "json"
 
 module Laspatule::Models::Validation
   enum Error
-    DuplicatedElements
+    DuplicatedElement
     TooLong
     TooShort
 
@@ -18,9 +18,11 @@ module Laspatule::Models::Validation
       errors = Hash(String | UInt8, ValidationError).new
 
       {% for attr in @type.instance_vars %}
-        if (field_errors = validate_{{attr.id}}).size > 0
-          errors[{{attr.stringify}}] = field_errors
-        end
+        {% if @type.has_method?("validate_#{attr}") %}
+          if (field_errors = validate_{{attr.id}}).size > 0
+            errors[{{attr.stringify}}] = field_errors
+          end
+        {% end %}
       {% end %}
 
       errors

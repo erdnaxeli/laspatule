@@ -6,4 +6,15 @@ STEP2     = Laspatule::Models::Recipe::Step.new(id: 2, instruction: "ajouter l'a
 SECTION   = Laspatule::Models::Recipe::Section.new(id: 1, title: "L'aubergine")
 USER      = Laspatule::Models::User.new(id: 1, name: "user")
 
-CREATE_AUBERGINE = Laspatule::Models::CreateIngredient.new(name: "aubergine")
+CREATE_AUBERGINE        = Laspatule::Models::CreateIngredient.new(name: "aubergine")
+CREATE_RECIPE_AUBERGINE = Laspatule::Models::CreateRecipe::CreateIngredient.new(
+  quantity: "1",
+  ingredient_id: 1,
+)
+CREATE_STEP = Laspatule::Models::CreateRecipe::CreateStep.new(
+  instruction: "couper l'aubergine en morceaux",
+)
+CREATE_SECTION = Laspatule::Models::CreateRecipe::CreateSection.new(
+  title: "l'aubergine",
+  steps: [CREATE_STEP],
+)

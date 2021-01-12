@@ -57,7 +57,7 @@ module Laspatule::API::Doc
                 "query",
                 "string",
                 "next page's token",
-              )
+              ),
             ],
             responses: [
               Swagger::Response.new("200", "Success", "Ingredient"),
@@ -70,9 +70,9 @@ module Laspatule::API::Doc
             request: Swagger::Request.new("CreateIngredient"),
             responses: [
               Swagger::Response.new("200", "Success", "Ingredient"),
-              Swagger::Response.new("409", "Duplicate")
+              Swagger::Response.new("409", "Duplicate"),
             ]
-          )
+          ),
         ]
       )
     )

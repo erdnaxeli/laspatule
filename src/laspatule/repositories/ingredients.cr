@@ -2,7 +2,7 @@ require "../models"
 require "./exceptions"
 
 module Laspatule::Repositories::Ingredients
-  class DuplicatedIngredientError < Exception
+  class DuplicatedIngredientError < DuplicatedError
   end
 
   class IngredientNotFoundError < NotFoundError

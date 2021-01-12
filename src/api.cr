@@ -6,6 +6,7 @@ config = Laspatule::Config.read("config.yaml")
 db = Laspatule::Repositories::DB.open(config.db)
 Laspatule::Repositories::DB.migrate(db)
 ingredients_repo = Laspatule::Repositories::DB::Ingredients.new(db)
+recipes_repo = Laspatule::Repositories::DB::Recipes.new(db)
 
 serve_static false
 
@@ -16,6 +17,7 @@ after_all do |env|
 end
 
 Laspatule::API::Ingredients.setup(ingredients_repo)
+Laspatule::API::Recipes.setup(recipes_repo)
 Laspatule::API::Doc.setup
 
 Kemal.run
