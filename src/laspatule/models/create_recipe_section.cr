@@ -16,6 +16,13 @@ record(
   end
 
   private def validate_steps
-    errors_from(@steps)
+    errors = Array(Validation::Error).new
+    too_short(errors, @steps, 0)
+
+    if errors.size > 0
+      errors
+    else
+      errors_from(@steps)
+    end
   end
 end

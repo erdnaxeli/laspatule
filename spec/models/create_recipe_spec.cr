@@ -77,10 +77,7 @@ describe Laspatule::Models::CreateRecipe do
         title: "La ratatouille",
         ingredients: [CREATE_RECIPE_AUBERGINE],
         sections: [
-          Laspatule::Models::CreateRecipe::CreateSection.new(
-            title: "L'aubergine",
-            steps: Array(Laspatule::Models::CreateRecipe::CreateStep).new,
-          ),
+          CREATE_SECTION,
           invalid_section,
         ]
       )
