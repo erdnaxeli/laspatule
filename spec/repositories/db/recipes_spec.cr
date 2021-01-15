@@ -147,4 +147,91 @@ describe Laspatule::Repositories::DB::Recipes do
       end
     end
   end
+
+  describe "#get_by_id" do
+    it "returns an error when the recipe is not found" do
+      with_recipes_repo do |repo|
+        expect_raises(Laspatule::Repositories::Recipes::RecipeNotFoundError) do
+          repo.get_by_id(42)
+        end
+      end
+    end
+
+    it "gets a recipe by id" do
+      with_recipes_repo do |repo, ingredients|
+        aubergine = Laspatule::Models::CreateIngredient.new(name: "aubergine")
+        courgette = Laspatule::Models::CreateIngredient.new(name: "courgette")
+        aubergine_id = ingredients.create(aubergine)
+        courgette_id = ingredients.create(courgette)
+
+        recipe = Laspatule::Models::CreateRecipe.new(
+          title: "Ratatouille",
+          ingredients: [
+            Laspatule::Models::CreateRecipe::CreateIngredient.new(
+              quantity: "1",
+              ingredient_id: aubergine_id.not_nil!,
+            ),
+            Laspatule::Models::CreateRecipe::CreateIngredient.new(
+              quantity: "1",
+              ingredient_id: courgette_id.not_nil!,
+            ),
+          ],
+          sections: [
+            Laspatule::Models::CreateRecipe::CreateSection.new(
+              title: "l'aubergine",
+              steps: [
+                Laspatule::Models::CreateRecipe::CreateStep.new(
+                  instruction: "couper l'aubergine en cubes"
+                ),
+                Laspatule::Models::CreateRecipe::CreateStep.new(
+                  instruction: "faire revenir rapidement à la poêle"
+                ),
+                Laspatule::Models::CreateRecipe::CreateStep.new(
+                  instruction: "ajouter le tout à la marmite"
+                ),
+              ]
+            ),
+            Laspatule::Models::CreateRecipe::CreateSection.new(
+              title: "la courgette",
+              steps: [
+                Laspatule::Models::CreateRecipe::CreateStep.new(
+                  instruction: "couper la courgette en tranches"
+                ),
+                Laspatule::Models::CreateRecipe::CreateStep.new(
+                  instruction: "faire revenir rapidement à la poêle"
+                ),
+                Laspatule::Models::CreateRecipe::CreateStep.new(
+                  instruction: "ajouter le tout à la marmite"
+                ),
+              ]
+            ),
+          ]
+        )
+        id = repo.create(recipe, 12)
+
+        recipe = repo.get_by_id(id)
+
+        recipe.id.should eq(id)
+        recipe.title.should eq("Ratatouille")
+        recipe.ingredients.size.should eq(2)
+        recipe.ingredients.map { |i| {i.quantity, i.ingredient.name} }.to_set.should eq(
+          Set{
+            {"1", "aubergine"},
+            {"1", "courgette"},
+          }
+        )
+        recipe.sections.size.should eq(2)
+        recipe.sections[0].title.should eq("l'aubergine")
+        recipe.sections[0].steps.size.should eq(3)
+        recipe.sections[0].steps[0].instruction.should eq("couper l'aubergine en cubes")
+        recipe.sections[0].steps[1].instruction.should eq("faire revenir rapidement à la poêle")
+        recipe.sections[0].steps[2].instruction.should eq("ajouter le tout à la marmite")
+        recipe.sections[1].title.should eq("la courgette")
+        recipe.sections[1].steps.size.should eq(3)
+        recipe.sections[1].steps[0].instruction.should eq("couper la courgette en tranches")
+        recipe.sections[1].steps[1].instruction.should eq("faire revenir rapidement à la poêle")
+        recipe.sections[1].steps[2].instruction.should eq("ajouter le tout à la marmite")
+      end
+    end
+  end
 end

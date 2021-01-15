@@ -10,6 +10,17 @@ module Laspatule::API::Recipes
       page.to_json
     end
 
+    get "/recipes/:id" do |env|
+      id = env.params.url["id"].to_i
+      service = Laspatule::Services::Recipes.new(12, recipes_repo)
+
+      begin
+        service.get_by_id(id).to_json
+      rescue Laspatule::Repositories::Recipes::RecipeNotFoundError
+        halt env, status_code: 404
+      end
+    end
+
     post "/recipes" do |env|
       if env.request.headers["content-type"]?.try &.downcase != "application/json"
         halt env, status_code: 415

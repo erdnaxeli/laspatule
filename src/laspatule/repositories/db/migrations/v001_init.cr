@@ -31,13 +31,17 @@ module Laspatule::Repositories::DB::Migrations::V001
         , title TEXT(100) NOT NULL
         , recipe_id INTEGER NOT NULL
           REFERENCES recipe (id) ON DELETE CASCADE
+        , position INTEGER NOT NULL
+        , UNIQUE(recipe_id, position)
       );
       CREATE TABLE recipe_step(
-        id INTEGER PRIMARY_KEY
+        id INTEGER PRIMARY KEY
         , created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         , instruction TEXT(512) NOT NULL
         , section_id INTEGER NOT NULL
           REFERENCES recipe_section (id) ON DELETE CASCADE
+        , position INTEGER NOT NULL
+        , UNIQUE(section_id, position)
       );
       CREATE TABLE recipe_ingredient (
         id INTEGER PRIMARY KEY
