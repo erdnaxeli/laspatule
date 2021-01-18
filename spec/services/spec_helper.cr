@@ -32,3 +32,34 @@ class IngredientRepoMock
     end
   end
 end
+
+class UserRepoMock
+  include Laspatule::Repositories::Users
+
+  def initialize(
+    @create_return : Int32? | Exception = nil,
+    @get_by_email_return : Laspatule::Models::UserWithPassword? | Exception = nil,
+    @get_by_id_return : Laspatule::Models::User? | Exception = nil,
+  )
+  end
+
+  def create(user : Laspatule::Models::CreateUser) : Int32
+    raise_or @create_return.not_nil!
+  end
+
+  def get_by_email(email : String) : Laspatule::Models::UserWithPassword
+    raise_or @get_by_email_return.not_nil!
+  end
+
+  def get_by_id(id : Int32) : Laspatule::Models::User
+    raise_or @get_by_id_return.not_nil!
+  end
+
+  private def raise_or(value)
+    if value.is_a?(Exception)
+      raise value
+    end
+
+    value
+  end
+end
