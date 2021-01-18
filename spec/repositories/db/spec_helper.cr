@@ -30,3 +30,10 @@ def with_recipes_repo
     yield repo, ingredients, db
   end
 end
+
+def with_users_repo
+  with_db do |db|
+    repo = Laspatule::Repositories::DB::Users.new(db)
+    yield repo, db
+  end
+end
