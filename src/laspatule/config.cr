@@ -7,7 +7,7 @@ require "./services/mail/mailgun"
 record(
   Laspatule::Config,
   db : Repositories::DB::Config,
-  mail : Services::Mail::Mailgun::Config,
+  mail : Services::Mail::Mailgun::Config
 ) do
   include YAML::Serializable
 

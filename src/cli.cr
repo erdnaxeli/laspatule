@@ -5,8 +5,9 @@ require "./laspatule"
 config = Laspatule::Config.read("config.yaml")
 db = Laspatule::Repositories::DB.open(config.db)
 Laspatule::Repositories::DB.migrate(db)
+mail = Laspatule::Services::Mail::Mailgun.new(config.mail)
 users_repo = Laspatule::Repositories::DB::Users.new(db)
-users_service = Laspatule::Services::Users.new(users_repo)
+users_service = Laspatule::Services::Users.new(users_repo, mail)
 
 OptionParser.parse do |parser|
   parser.banner = "Usage: cli COMMAND"

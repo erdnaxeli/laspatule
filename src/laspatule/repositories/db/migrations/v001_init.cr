@@ -13,15 +13,24 @@ module Laspatule::Repositories::DB::Migrations::V001
         , email TEXT(100) UNIQUE NOT NULL
         , password TEXT(100)
       );
-      CREATE INDEX user_id_idx ON user (id);
       CREATE TABLE password_reinit(
         id INTEGER PRIMARY KEY
         , created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
         , token TEXT(100) NOT NULL
-        , user_id INTEGER NOT NULL
+        , user_id INTEGER UNIQUE NOT NULL
           REFERENCES user (id) ON DELETE CASCADE
       );
       CREATE INDEX password_reinit_user_id_idx ON password_reinit (user_id);
+      CREATE INDEX password_reinit_token_idx ON password_reinit (token);
+      CREATE TABLE user_session(
+        id INTEGER PRIMARY KEY
+        , created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+        , user_id INTEGER NOT NULL
+          REFERENCES user (id) ON DELETE CASCADE
+        , access_token INTEGER NOT NULL
+      );
+      CREATE INDEX user_session_user_id_idx ON user_session (user_id);
+      CREATE UNIQUE INDEX user_session_access_token_idx ON user_session (access_token);
       CREATE TABLE ingredient (
         id INTEGER PRIMARY KEY
         , created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP

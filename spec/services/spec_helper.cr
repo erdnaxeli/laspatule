@@ -36,15 +36,28 @@ end
 class UserRepoMock
   include Laspatule::Repositories::Users
 
+  getter add_access_token_calls = Array(NamedTuple(user_id: Int32, access_token: String)).new
+  getter set_renew_token_calls = Array(NamedTuple(user_id: Int32, token: String)).new
+
   def initialize(
     @create_return : Int32? | Exception = nil,
+    @get_by_access_token : Laspatule::Models::User? | Exception = nil,
     @get_by_email_return : Laspatule::Models::UserWithPassword? | Exception = nil,
-    @get_by_id_return : Laspatule::Models::User? | Exception = nil
+    @get_by_id_return : Laspatule::Models::User? | Exception = nil,
+    @get_by_renew_token : Laspatule::Models::User? | Exception = nil
   )
+  end
+
+  def add_access_token(user_id : Int32, access_token : String) : Nil
+    @add_access_token_calls << {user_id: user_id, access_token: access_token}
   end
 
   def create(user : Laspatule::Models::CreateUser) : Int32
     raise_or @create_return.not_nil!
+  end
+
+  def get_by_access_token(access_token : String) : Laspatule::Models::User
+    @get_by_access_token.not_nil!
   end
 
   def get_by_email(email : String) : Laspatule::Models::UserWithPassword
@@ -53,6 +66,14 @@ class UserRepoMock
 
   def get_by_id(id : Int32) : Laspatule::Models::User
     raise_or @get_by_id_return.not_nil!
+  end
+
+  def get_by_renew_token(renew_token : String) : Laspatule::Models::User
+    @get_by_renew_token.not_nil!
+  end
+
+  def set_renew_token(user_id : Int32, token : String) : Nil
+    @set_renew_token_calls << {user_id: user_id, token: token}
   end
 
   private def raise_or(value)
@@ -84,5 +105,15 @@ class RecipesRepoMock
 
   def get_by_id(id : Int32) : Laspatule::Models::Recipe
     @get_by_id_return.not_nil!
+  end
+end
+
+class MailServiceMock
+  include Laspatule::Services::Mail
+
+  getter send_calls = Array(NamedTuple(to: String, subject: String, text: String)).new
+
+  def send(to : String, subject : String, text : String) : Nil
+    @send_calls << {to: to, subject: subject, text: text}
   end
 end
