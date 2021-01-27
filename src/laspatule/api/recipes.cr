@@ -22,10 +22,6 @@ module Laspatule::API::Recipes
     end
 
     post "/recipes" do |env|
-      if env.request.headers["content-type"]?.try &.downcase != "application/json"
-        halt env, status_code: 415
-      end
-
       recipe = Laspatule::Models::CreateRecipe.from_json(
         env.request.body.not_nil!.gets_to_end
       )
