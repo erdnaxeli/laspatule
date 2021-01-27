@@ -14,5 +14,5 @@ module Laspatule::Repositories::Recipes
   # Gets all recipes ordered by name,
   #
   # This is a paginated query, see `Models::Page` for the pagination instructions.
-  abstract def get_all(page_size : Int32, next_page previous_page : Int32? = nil) : Models::Page(Models::Recipe)
+  abstract def get_all(page_size : Int32, next_page previous_page : String? = nil) : Models::Page(Models::Recipe)
 end

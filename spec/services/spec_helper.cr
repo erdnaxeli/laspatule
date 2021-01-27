@@ -26,6 +26,10 @@ class IngredientRepoMock
     )
   end
 
+  def search_by_name(name : String, page_size : Int32, next_page previous_page : String? = nil) : Laspatule::Models::Page(Laspatule::Models::Ingredient)
+    Laspatule::Models::Page(Laspatule::Models::Ingredient).new
+  end
+
   def reset : Nil
     @calls = Calls.new do |h, k|
       h[k] = Array(Hash(String, Int32 | Laspatule::Models::CreateIngredient)).new
@@ -99,7 +103,7 @@ class RecipesRepoMock
     @create_return.not_nil!
   end
 
-  def get_all(page_size : Int32, next_page previous_page : Int32? = nil) : Laspatule::Models::Page(Laspatule::Models::Recipe)
+  def get_all(page_size : Int32, next_page previous_page : String? = nil) : Laspatule::Models::Page(Laspatule::Models::Recipe)
     @get_all_return.not_nil!
   end
 

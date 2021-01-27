@@ -94,7 +94,7 @@ describe Laspatule::Services::Users do
 
   describe "#create" do
     it "creates a new user, set their renew token, and send them a mail" do
-      repo = UserRepoMock.new(create_return=12)
+      repo = UserRepoMock.new(create_return: 12)
       mail = MailServiceMock.new
       service = Laspatule::Services::Users.new(repo, mail)
 

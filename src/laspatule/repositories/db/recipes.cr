@@ -95,7 +95,7 @@ class Laspatule::Repositories::DB::Recipes
     end
   end
 
-  def get_all(page_size : Int32, next_page previous_page : Int32?) : Models::Page(Models::Recipe)
+  def get_all(page_size : Int32, next_page previous_page : String? = nil) : Models::Page(Models::Recipe)
     Models::Page(Models::Recipe).new(
       content: Array(Models::Recipe).new,
       next_page: nil,

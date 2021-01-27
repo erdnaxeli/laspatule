@@ -24,5 +24,5 @@ module Laspatule::Repositories::Ingredients
   # shortest first.
   #
   # This is a paginated query, see `Models::Page` for pagination instructions.
-  abstract def search_by_name(name : String, page_size : Int32, next_page previous_page : Int32? = nil) : Models::Page(Ingredient)
+  abstract def search_by_name(name : String, page_size : Int32, next_page previous_page : String? = nil) : Models::Page(Models::Ingredient)
 end
