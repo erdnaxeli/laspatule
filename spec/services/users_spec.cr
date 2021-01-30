@@ -127,4 +127,32 @@ describe Laspatule::Services::Users do
       repo.add_access_token_calls[0]["access_token"].should eq(access_token)
     end
   end
+
+  describe "#get_by_access_token?" do
+    it "returns a user if found" do
+      user = Laspatule::Models::User.new(
+        id: 12,
+        name: "douze",
+      )
+      repo = UserRepoMock.new(get_by_access_token: user)
+      mail = MailServiceMock.new
+      service = Laspatule::Services::Users.new(repo, mail)
+
+      result = service.get_by_access_token?("access_token")
+
+      result.should eq(user)
+    end
+
+    it "returns nil when the user is not found" do
+      repo = UserRepoMock.new(
+        get_by_access_token: Laspatule::Repositories::Users::UserNotFoundError.new
+      )
+      mail = MailServiceMock.new
+      service = Laspatule::Services::Users.new(repo, mail)
+
+      result = service.get_by_access_token?("access_token")
+
+      result.should be_nil
+    end
+  end
 end

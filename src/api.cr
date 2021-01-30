@@ -33,6 +33,27 @@ end
 # Empty handler to not respond with a 404.
 options "/*" { }
 
+class AuthHandler < Kemal::Handler
+  exclude ["/user/auth"], "POST"
+  exclude ["/*"], "OPTIONS"
+
+  def call(env)
+    return call_next(env) if exclude_match?(env)
+
+    if authorization = env.request.headers["authorization"]?
+      if authorization =~ /^Bearer ([^ ]+)$/
+        _, access_token = authorization.split(' ')
+
+        env.set "access_token", access_token
+
+        call_next(env)
+      end
+    end
+  end
+end
+
+add_handler AuthHandler.new
+
 Laspatule::API::Doc.setup
 Laspatule::API::Ingredients.setup(ingredients_repo)
 Laspatule::API::Recipes.setup(recipes_repo)

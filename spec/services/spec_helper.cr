@@ -61,7 +61,7 @@ class UserRepoMock
   end
 
   def get_by_access_token(access_token : String) : Laspatule::Models::User
-    @get_by_access_token.not_nil!
+    raise_or @get_by_access_token.not_nil!
   end
 
   def get_by_email(email : String) : Laspatule::Models::UserWithPassword

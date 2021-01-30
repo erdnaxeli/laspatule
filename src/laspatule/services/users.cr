@@ -47,6 +47,13 @@ class Laspatule::Services::Users
     access_token
   end
 
+  # Gets a user by its access token.
+  def get_by_access_token?(access_token : String) : Models::User?
+    @repository.get_by_access_token(access_token)
+  rescue Repositories::Users::UserNotFoundError
+    nil
+  end
+
   private def create_token(size : Int32) : String
     bytes = Random::Secure.random_bytes(size)
     Base64.urlsafe_encode(bytes).rstrip('=')
