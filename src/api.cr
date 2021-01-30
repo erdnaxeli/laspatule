@@ -24,14 +24,16 @@ before_post do |env|
   end
 end
 
-after_all do |env|
-  env.response.content_type = "application/json"
-  env.response.headers.add("Access-Control-Allow-Origin", "*")
-  env.response.headers.add("Access-Control-Allow-Headers", "*")
-end
-
 # Empty handler to not respond with a 404.
 options "/*" { }
+
+class CorsHandler < Kemal::Handler
+  def call(env)
+    env.response.headers["Access-Control-Allow-Origin"] = "*"
+    env.response.headers["Access-Control-Allow-Headers"] = "*"
+    call_next(env)
+  end
+end
 
 class AuthHandler < Kemal::Handler
   exclude ["/user/auth"], "POST"
@@ -49,9 +51,14 @@ class AuthHandler < Kemal::Handler
         call_next(env)
       end
     end
+
+    env.response.status_code = 401
+    env.response.headers["WWW-authenticate"] = "Bearer"
+    env.response.close
   end
 end
 
+add_handler CorsHandler.new
 add_handler AuthHandler.new
 
 Laspatule::API::Doc.setup
