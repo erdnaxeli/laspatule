@@ -29,7 +29,8 @@ module Laspatule::API::Recipes
         halt env, status_code: 400, response: errors.to_json
       end
 
-      service = Laspatule::Services::Recipes.new(12, recipes_repo)
+      user_id = env.get("user_id").as(Int32)
+      service = Laspatule::Services::Recipes.new(user_id, recipes_repo)
 
       begin
         service.create(recipe).to_json

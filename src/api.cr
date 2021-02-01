@@ -7,8 +7,9 @@ db = Laspatule::Repositories::DB.open(config.db)
 Laspatule::Repositories::DB.migrate(db)
 ingredients_repo = Laspatule::Repositories::DB::Ingredients.new(db)
 recipes_repo = Laspatule::Repositories::DB::Recipes.new(db)
-mail = Laspatule::Services::Mail::Mailgun.new(config.mail)
 users_repo = Laspatule::Repositories::DB::Users.new(db)
+mail = Laspatule::Services::Mail::Mailgun.new(config.mail)
+users_service = Laspatule::Services::Users.new(users_repo, mail)
 
 serve_static false
 
@@ -36,8 +37,15 @@ class CorsHandler < Kemal::Handler
 end
 
 class AuthHandler < Kemal::Handler
+  exclude ["/swagger", "/v3/swagger.json"], "GET"
   exclude ["/user/auth"], "POST"
   exclude ["/*"], "OPTIONS"
+
+  @service : Laspatule::Services::Users
+
+  def initialize(users_repo, mail)
+    @service = Laspatule::Services::Users.new(users_repo, mail)
+  end
 
   def call(env)
     return call_next(env) if exclude_match?(env)
@@ -45,10 +53,12 @@ class AuthHandler < Kemal::Handler
     if authorization = env.request.headers["authorization"]?
       if authorization =~ /^Bearer ([^ ]+)$/
         _, access_token = authorization.split(' ')
+        if user = @service.get_by_access_token?(access_token)
+          env.set "access_token", access_token
+          env.set "user_id", user.id
 
-        env.set "access_token", access_token
-
-        call_next(env)
+          return call_next(env)
+        end
       end
     end
 
@@ -59,11 +69,11 @@ class AuthHandler < Kemal::Handler
 end
 
 add_handler CorsHandler.new
-add_handler AuthHandler.new
+add_handler AuthHandler.new(users_repo, mail)
 
 Laspatule::API::Doc.setup
 Laspatule::API::Ingredients.setup(ingredients_repo)
 Laspatule::API::Recipes.setup(recipes_repo)
-Laspatule::API::User.setup(users_repo, mail)
+Laspatule::API::User.setup(users_service)
 
 Kemal.run
