@@ -7,6 +7,10 @@ module Laspatule::API::Doc
       title: "La Spatule",
       version: Laspatule::VERSION,
       description: "La spatule's API",
+      authorizations: [
+        Swagger::Authorization.none,
+        Swagger::Authorization.new("bearer", "access token"),
+      ]
     )
 
     builder.add(
@@ -25,6 +29,28 @@ module Laspatule::API::Doc
         "CreateIngredient",
         "object",
         [Swagger::Property.new("name", example: "aubergine")],
+      )
+    )
+
+    builder.add(
+      Swagger::Object.new(
+        "User",
+        "object",
+        [
+          Swagger::Property.new("id", "integer", "int32", example: 1),
+          Swagger::Property.new("name", example: "George Abitbol"),
+        ]
+      )
+    )
+
+    builder.add(
+      Swagger::Object.new(
+        "Login",
+        "object",
+        [
+          Swagger::Property.new("email", example: "george.abitbol@example.org"),
+          Swagger::Property.new("password", "string", "password", example: "very secret"),
+        ]
       )
     )
 
@@ -62,6 +88,7 @@ module Laspatule::API::Doc
             responses: [
               Swagger::Response.new("200", "Success", "Ingredient"),
             ],
+            authorization: true,
           ),
           Swagger::Action.new(
             "post",
@@ -71,10 +98,44 @@ module Laspatule::API::Doc
             responses: [
               Swagger::Response.new("200", "Success", "Ingredient"),
               Swagger::Response.new("409", "Duplicate"),
-            ]
+            ],
+            authorization: true
           ),
         ]
       )
+    )
+
+    builder.add(
+      Swagger::Controller.new(
+        "User",
+        "Manage user",
+        [
+          Swagger::Action.new(
+            "get",
+            "/user",
+            description: "Return the current user",
+            responses: [
+              Swagger::Response.new("200", "Success", "User"),
+              Swagger::Response.new("401", "Authorization required"),
+            ],
+            authorization: true,
+          ),
+          Swagger::Action.new(
+            "post",
+            "/user/auth",
+            description: "Auth an user and get an access token",
+            request: Swagger::Request.new("Login"),
+            responses: [
+              Swagger::Response.new(
+                "200",
+                "Success",
+                Swagger::Objects::Schema.new("string")
+              ),
+              Swagger::Response.new("401", "Authorization required"),
+            ]
+          ),
+        ]
+      ),
     )
 
     swagger_api_endpoint = "http://localhost:3000"
