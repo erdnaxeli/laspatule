@@ -27,5 +27,5 @@ dependencies:
     github: crystal-lang/crystal-sqlite3
     version: ~>0.17.0
   swagger:
-    github: icyleaf/swagger
-    version: ~>0.2.2
+    github: erdnaxeli/swagger
+    commit: 82b4a187c1cf1fcc5aa15eb2681d882b41305c45

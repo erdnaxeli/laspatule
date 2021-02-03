@@ -86,7 +86,14 @@ module Laspatule::API::Doc
               ),
             ],
             responses: [
-              Swagger::Response.new("200", "Success", "Ingredient"),
+              Swagger::Response.new(
+                "200",
+                "Success",
+                Swagger::Objects::Schema.new(
+                  "array",
+                  items: Swagger::Objects::Schema.use_reference("Ingredient"),
+                ),
+              ),
             ],
             authorization: true,
           ),
