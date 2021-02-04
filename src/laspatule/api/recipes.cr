@@ -1,5 +1,6 @@
 require "kemal"
 
+require "./schemas/recipe"
 require "../services/recipes"
 
 module Laspatule::API::Recipes
@@ -7,7 +8,11 @@ module Laspatule::API::Recipes
     get "/recipes" do |_|
       service = Laspatule::Services::Recipes.new(12, recipes_repo)
       page = service.get_all(20)
-      page.to_json
+
+      Models::Page(Schemas::Recipe).new(
+        content: page.content.map { |r| Schemas::Recipe.new(r) },
+        next_page: page.next_page,
+      ).to_json
     end
 
     get "/recipes/:id" do |env|
