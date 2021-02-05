@@ -30,5 +30,5 @@ shards:
 
   swagger:
     git: https://github.com/erdnaxeli/swagger.git
-    version: 0.2.2+git.commit.82b4a187c1cf1fcc5aa15eb2681d882b41305c45
+    version: 0.2.2+git.commit.dc5cd765b5b5b80b82b61863b2818f40410d7382
 

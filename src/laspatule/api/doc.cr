@@ -23,7 +23,16 @@ module Laspatule::API::Doc
         ],
       )
     )
-
+    builder.add(
+      Swagger::Object.new(
+        "IngredientsPage",
+        "object",
+        [
+          Swagger::Property.new("content", "array", items: "Ingredient"),
+          Swagger::Property.new("next_page", description: "an opaque token to use to get the next page")
+        ]
+      ),
+    )
     builder.add(
       Swagger::Object.new(
         "CreateIngredient",
@@ -31,7 +40,6 @@ module Laspatule::API::Doc
         [Swagger::Property.new("name", example: "aubergine")],
       )
     )
-
     builder.add(
       Swagger::Object.new(
         "User",
@@ -42,7 +50,6 @@ module Laspatule::API::Doc
         ]
       )
     )
-
     builder.add(
       Swagger::Object.new(
         "Login",
@@ -52,6 +59,67 @@ module Laspatule::API::Doc
           Swagger::Property.new("password", "string", "password", example: "very secret"),
         ]
       )
+    )
+    builder.add(
+      Swagger::Object.new(
+        "Recipe",
+        "object",
+        [
+          Swagger::Property.new("id", "integer", "int32", example: 1),
+          Swagger::Property.new("title", example: "La ratatouille"),
+          Swagger::Property.new(
+            "ingredients",
+            "array",
+            items: Swagger::Object.new(
+              "RecipeIngredient",
+              "object",
+              [
+                Swagger::Property.new("id", "integer", "int32", example: 1),
+                Swagger::Property.new("name", example: "Aubergine"),
+                Swagger::Property.new("quantity", example: "1"),
+              ]
+            ),
+          ),
+          Swagger::Property.new(
+            "sections",
+            "array",
+            items: Swagger::Object.new(
+              "RecipeSection",
+              "object",
+              [
+                Swagger::Property.new("id", "integer", "int32", example: 1),
+                Swagger::Property.new(
+                  "steps",
+                  "array",
+                  items: Swagger::Object.new(
+                    "RecipeStep",
+                    "object",
+                    [
+                      Swagger::Property.new("id", "integer", "int32", example: 1),
+                      Swagger::Property.new("instruction", example: "Couper en morceaux"),
+                    ]
+                  )
+                ),
+              ]
+            )
+          ),
+          Swagger::Property.new(
+            "user",
+            "object",
+            ref: "User",
+          )
+        ]
+      )
+    )
+    builder.add(
+      Swagger::Object.new(
+        "RecipesPage",
+        "object",
+        [
+          Swagger::Property.new("content", "array", items: "Recipe"),
+          Swagger::Property.new("next_page", description: "an opaque token to use to get the next page")
+        ]
+      ),
     )
 
     builder.add(
@@ -86,14 +154,7 @@ module Laspatule::API::Doc
               ),
             ],
             responses: [
-              Swagger::Response.new(
-                "200",
-                "Success",
-                Swagger::Objects::Schema.new(
-                  "array",
-                  items: Swagger::Objects::Schema.use_reference("Ingredient"),
-                ),
-              ),
+              Swagger::Response.new("200", "Success", "IngredientsPage"),
             ],
             authorization: true,
           ),
@@ -143,6 +204,23 @@ module Laspatule::API::Doc
           ),
         ]
       ),
+    )
+
+    builder.add(
+      Swagger::Controller.new(
+        "Recipes",
+        "Manage recipes",
+        [
+          Swagger::Action.new(
+            "get",
+            "/recipes",
+            description: "Get recipes",
+            responses: [
+              Swagger::Response.new("200", "Success", "RecipesPage"),
+            ]
+          ),
+        ]
+      )
     )
 
     swagger_api_endpoint = "http://localhost:3000"

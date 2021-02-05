@@ -28,4 +28,4 @@ dependencies:
     version: ~>0.17.0
   swagger:
     github: erdnaxeli/swagger
-    commit: 82b4a187c1cf1fcc5aa15eb2681d882b41305c45
+    branch: property_ref
